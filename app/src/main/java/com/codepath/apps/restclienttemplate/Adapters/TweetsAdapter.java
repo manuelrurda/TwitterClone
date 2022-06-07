@@ -25,7 +25,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     public TweetsAdapter(Context context, List<Tweet> tweets) {
         this.context = context;
         this.tweets = tweets;
-        Log.d("ADAPTER_CREATED", "TweetsAdapter: " + tweets.toString());
     }
 
 
@@ -34,7 +33,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_tweet, parent, false);
-        Log.d("ON_CREATE_VIEWHOLDER", "SUCCESS: ");
         return new ViewHolder(view);
     }
 
@@ -44,7 +42,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         // Get data ready for display
         Tweet tweet = tweets.get(position);
         // Bind the data with viewholder
-        Log.d("ON_BIND_VEWHOLDER", "SUCCESS: ");
         holder.bind(tweet);
     }
 
@@ -71,12 +68,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
-            tvScreenName.setText(tweet.user.screenName);
+            tvScreenName.setText("@"+tweet.user.screenName);
             Glide.with(context)
                     .load(tweet.user.publicImageUrl)
                     .into(ivProfileImage);
 
-            Log.d("BINDING", "bind: " + tweet.body);
         }
     }
 

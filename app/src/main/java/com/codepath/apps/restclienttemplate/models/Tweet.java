@@ -29,9 +29,7 @@ public class Tweet {
 
     public static List<Tweet> fromJsonArray(JSONArray jsonArray) throws JSONException {
         List<Tweet> tweets = new ArrayList<>();
-        Log.d("FROM_JSON_ARRAY", "fromJsonArray: " + "INTO FUNCITON");
-        for (int i = 0; i < tweets.size(); i++) {
-            Log.d("THE_TWEET", "fromJsonArray: " + fromJson(jsonArray.getJSONObject(i)).body);
+        for (int i = 0; i < jsonArray.length(); i++) {
             tweets.add(fromJson(jsonArray.getJSONObject(i)));
         }
         return tweets;

@@ -12,7 +12,7 @@ public class User {
     public static User fromJson(JSONObject jsonObject) throws JSONException {
         User user = new User();
         user.name = jsonObject.getString("name");
-        user.screenName = jsonObject.getString("string_name");
+        user.screenName = jsonObject.getString("screen_name");
         user.publicImageUrl = jsonObject.getString("profile_image_url_https");
         return user;
     }
