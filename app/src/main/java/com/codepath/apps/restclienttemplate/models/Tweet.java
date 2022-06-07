@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.util.Log;
+
 import androidx.appcompat.widget.ToolbarWidgetWrapper;
 
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -27,7 +29,9 @@ public class Tweet {
 
     public static List<Tweet> fromJsonArray(JSONArray jsonArray) throws JSONException {
         List<Tweet> tweets = new ArrayList<>();
+        Log.d("FROM_JSON_ARRAY", "fromJsonArray: " + "INTO FUNCITON");
         for (int i = 0; i < tweets.size(); i++) {
+            Log.d("THE_TWEET", "fromJsonArray: " + fromJson(jsonArray.getJSONObject(i)).body);
             tweets.add(fromJson(jsonArray.getJSONObject(i)));
         }
         return tweets;
