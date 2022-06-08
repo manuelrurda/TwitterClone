@@ -1,11 +1,5 @@
 package com.codepath.apps.restclienttemplate.models;
 
-import android.util.Log;
-
-import androidx.appcompat.widget.ToolbarWidgetWrapper;
-
-import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +15,7 @@ public class Tweet {
     public String createdAt;
     public User user;
 
-    public Tweet() {
-    }
+    public Tweet() {}
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();

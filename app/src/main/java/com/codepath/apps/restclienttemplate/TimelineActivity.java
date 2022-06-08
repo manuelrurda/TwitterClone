@@ -23,6 +23,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +45,12 @@ public class TimelineActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+                    Log.d(TAG, "onActivityResult:" + result);
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         // Get the data passed from ComposeActivity
-                        Tweet tweet = data.getExtras().getParcelable("tweet");
+                        Tweet tweet = Parcels.unwrap(data.getExtras().getParcelable("tweet"));
+                        Log.d(TAG, "onActivityResult: RESULT_OK: " + data.toString());
                         tweets.add(0, tweet);
                         adapter.notifyItemInserted(0);
                         rvTweets.smoothScrollToPosition(0);
@@ -65,10 +68,10 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.compose){
             //startActivityForResult(intent, REQUEST_CODE); DEPRECATED
-
             Intent intent = new Intent(this, ComposeActivity.class);
+            Log.d(TAG, "onOptionsItemSelected: COMPOSE ACTIVITY LAUNCHED");
             composeActivityResultLauncher.launch(intent);
-        }
+        }   
         return true;
     }
 
@@ -117,7 +120,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     // Click handler for the logout button
     public void onClickLogOut(View view){
-        //finish(); // TODO: ask?
+        //finish();
         // forget who's logged in
         TwitterApp.getRestClient(this).clearAccessToken();
 
