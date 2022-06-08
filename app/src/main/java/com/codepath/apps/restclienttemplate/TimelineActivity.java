@@ -1,17 +1,21 @@
 package com.codepath.apps.restclienttemplate;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.Adapters.TweetsAdapter;
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -28,11 +32,28 @@ import okhttp3.Headers;
 public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
+    public static final int REQUEST_CODE = 15;
 
     TwitterClient client;
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
+
+    ActivityResultLauncher<Intent> composeActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        // Get the data passed from ComposeActivity
+                        Tweet tweet = data.getExtras().getParcelable("tweet");
+                        tweets.add(0, tweet);
+                        adapter.notifyItemInserted(0);
+                        rvTweets.smoothScrollToPosition(0);
+                    }
+                }
+            });
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -43,7 +64,10 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.compose){
-            Toast.makeText(this, "Compose", Toast.LENGTH_SHORT).show();
+            //startActivityForResult(intent, REQUEST_CODE); DEPRECATED
+
+            Intent intent = new Intent(this, ComposeActivity.class);
+            composeActivityResultLauncher.launch(intent);
         }
         return true;
     }

@@ -13,6 +13,7 @@ import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 
+	private static final String TAG = "Pressed";
 	SampleModelDao sampleModelDao;
 	
 	@Override
@@ -61,6 +62,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	// Uses the client to initiate OAuth authorization
 	// This should be tied to a button used to login
 	public void loginToRest(View view) {
+		Log.d(TAG, "loginToRest: ");
 		getClient().connect();
 	}
 
