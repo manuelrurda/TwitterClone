@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -33,12 +34,14 @@ import okhttp3.Headers;
 public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
-    public static final int REQUEST_CODE = 15;
 
-    TwitterClient client;
-    RecyclerView rvTweets;
-    List<Tweet> tweets;
-    TweetsAdapter adapter;
+    private TwitterClient client;
+    private RecyclerView rvTweets;
+    private List<Tweet> tweets;
+    private TweetsAdapter adapter;
+
+    private SwipeRefreshLayout srlRefresh;
+
 
     ActivityResultLauncher<Intent> composeActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -80,18 +83,49 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
+        srlRefresh = findViewById(R.id.srlRefresh);
+        srlRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                fetchTimelineAsync(0);
+            }
+        });
+
         client = TwitterApp.getRestClient(this);
 
-        // Find recycler view
-        rvTweets = findViewById(R.id.rvTweets);
         // Init the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
+
         // Recycler view setup
+        rvTweets = findViewById(R.id.rvTweets);
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
-        Log.d("ON_CREATE_TIMELINEACT", "onCreate: " + tweets);
+
         populateHomeTimeline();
+    }
+
+    public void fetchTimelineAsync(int page) {
+        client.getHomeTimeline(new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                // CLEAR OUT old items before appending in the new ones
+                adapter.clear();
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    adapter.addAll(Tweet.fromJsonArray(jsonArray));
+                } catch (JSONException e) {
+                    Log.d(TAG, "JSON EXCEPTION", e);
+                }
+                // signal refresh has finished
+                srlRefresh.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Log.d(TAG, "onFailure: ", throwable);
+            }
+        });
     }
 
     private void populateHomeTimeline() {
@@ -99,15 +133,11 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 JSONArray jsonArray = json.jsonArray;
-                Log.d(TAG, "jsonarray:" + jsonArray.toString());
                 try {
-                    Log.d("ADDING TWEETS", "onSuccess!" + jsonArray.toString());
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
-                    Log.d("ADDED TWEETS", "onSuccess!" + tweets.toString());
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.d(TAG, "JSON EXCEPTION", e);
-                    e.printStackTrace();
                 }
             }
 
