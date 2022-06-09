@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.R;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
@@ -56,22 +59,34 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
         TextView tvBody;
         TextView tvScreenName;
+        TextView tvName;
         ImageView ivProfileImage;
+        ImageView ivTweetMedia;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            tvName = itemView.findViewById(R.id.tvName);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            ivTweetMedia = itemView.findViewById(R.id.ivTweetMedia);
         }
 
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText("@"+tweet.user.screenName);
+            tvName.setText(tweet.user.name);
             Glide.with(context)
                     .load(tweet.user.publicImageUrl)
+                    .circleCrop()
                     .into(ivProfileImage);
+
+            int tweetMediaRadiusdp = 50;
+            Glide.with(context)
+                    .load(tweet.mediaUrl)
+                    .transform(new RoundedCorners(tweetMediaRadiusdp))
+                    .into(ivTweetMedia);
         }
     }
 
@@ -81,7 +96,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    // Add a list of items -- change to type used
+    // Add a list of items
     public void addAll(List<Tweet> list) {
         tweets.addAll(list);
         notifyDataSetChanged();

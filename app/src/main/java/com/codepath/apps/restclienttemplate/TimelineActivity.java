@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -35,13 +36,12 @@ public class TimelineActivity extends AppCompatActivity {
 
     public static final String TAG = "TimelineActivity";
 
-    private TwitterClient client;
-    private RecyclerView rvTweets;
-    private List<Tweet> tweets;
-    private TweetsAdapter adapter;
+    TwitterClient client;
+    RecyclerView rvTweets;
+    List<Tweet> tweets;
+    TweetsAdapter adapter;
 
     private SwipeRefreshLayout srlRefresh;
-
 
     ActivityResultLauncher<Intent> composeActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -98,9 +98,13 @@ public class TimelineActivity extends AppCompatActivity {
         adapter = new TweetsAdapter(this, tweets);
 
         // Recycler view setup
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         rvTweets = findViewById(R.id.rvTweets);
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(adapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvTweets.getContext(),
+                linearLayoutManager.getOrientation());
+        rvTweets.addItemDecoration(dividerItemDecoration);
 
         populateHomeTimeline();
     }

@@ -25,9 +25,8 @@ import okhttp3.Headers;
 
 public class ComposeActivity extends AppCompatActivity {
 
-    private TextInputEditText etCompose;
-    private TextInputLayout tiTweetLayout;
-    private Button btnTweet;
+    TextInputEditText etCompose;
+    Button btnTweet;
 
     public static final String TAG = "COMPOSE_ACTIVITY";
     public static final int MAX_TWEET_LENGTH = 140;
@@ -41,7 +40,6 @@ public class ComposeActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(this);
 
-        tiTweetLayout = findViewById(R.id.tiTweetLayout);
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
 

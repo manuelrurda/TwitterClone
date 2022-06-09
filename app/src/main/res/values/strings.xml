@@ -7,5 +7,7 @@
     <string name="intent_host">cprest</string>
     <string name="logout_label">Log out</string>
     <string name="tweet">TWEET</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="tweet_media">Tweet Media</string>
 
 </resources>

@@ -11,17 +11,28 @@ import java.util.List;
 @Parcel
 public class Tweet {
 
+    public static final String TAG = "DEBUG";
     public String body;
     public String createdAt;
+    public String mediaUrl = null;
     public User user;
 
     public Tweet() {}
 
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
-        tweet.body = jsonObject.getString("text");
+        if(jsonObject.has("full_text")) {
+            tweet.body = jsonObject.getString("full_text");
+        } else {
+            tweet.body = jsonObject.getString("text");
+        }
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
+        JSONObject entities = jsonObject.getJSONObject("entities");
+        if(entities.has("media")) {
+            JSONArray media = entities.getJSONArray("media");
+            tweet.mediaUrl = media.getJSONObject(0).getString("media_url_https");
+        }
         return tweet;
     }
 
