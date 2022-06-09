@@ -155,7 +155,7 @@ public class TimelineActivity extends AppCompatActivity {
     // Click handler for the logout button
     public void onClickLogOut(View view){
         //finish();
-        // forget who's logged in
+        //forget who's logged in
         TwitterApp.getRestClient(this).clearAccessToken();
 
         Intent i = new Intent(this, LoginActivity.class);

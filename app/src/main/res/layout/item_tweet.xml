@@ -38,7 +38,10 @@
                 android:id="@+id/tvName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:fontFamily="@font/nunito_sans_semibold"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 tools:text="Manuel Rodriguez" />
@@ -48,13 +51,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:ellipsize="end"
                 android:fontFamily="@font/nunito_sans"
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="#86000000"
                 android:textSize="16sp"
                 tools:text="manuelrurda" />
+
+            <TextView
+                android:id="@+id/tvRelativeTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/nunito_sans"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="#86000000"
+                tools:text=" · 3m" />
 
         </LinearLayout>
 
