@@ -47,25 +47,25 @@ Here's a walkthrough of implemented user stories:
 
 Login:
 
-<img src='https://github.com/manuelrurda/TwitterClone/blob/main/Login.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/manuelrurda/TwitterClone/blob/main/Login.gif' title='Video Walkthrough' width='400' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
 Endless Scrolling:
 
-<img src='https://github.com/manuelrurda/TwitterClone/blob/main/EndlessScrolling.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/manuelrurda/TwitterClone/blob/main/EndlessScrolling.gif' title='Video Walkthrough' width='400' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
 Refresh and Tweeting:
 
-<img src='https://github.com/manuelrurda/TwitterClone/blob/main/Refresh%26Tweet.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/manuelrurda/TwitterClone/blob/main/Refresh%26Tweet.gif' title='Video Walkthrough' width='400' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
 Logout:
 
-<img src='https://github.com/manuelrurda/TwitterClone/blob/main/logout.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/manuelrurda/TwitterClone/blob/main/logout.gif' title='Video Walkthrough' width='400' alt='Video Walkthrough' />
 
 GIF created with [Kap](https://getkap.co/).
 
