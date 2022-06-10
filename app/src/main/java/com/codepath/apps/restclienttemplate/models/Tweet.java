@@ -21,6 +21,7 @@ public class Tweet {
     public String relativeTime;
     public String mediaUrl = null;
     public User user;
+    public String id;
 
     public Tweet() {}
 
@@ -44,6 +45,7 @@ public class Tweet {
             tweet.mediaUrl = media.getJSONObject(0).getString("media_url_https");
         }
 
+        tweet.id = jsonObject.getString("id");
         return tweet;
     }
 

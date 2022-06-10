@@ -11,17 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp">
 
-        <ImageView
-            android:id="@+id/imTwitterLogo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/btnLogOut"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_icon_twitter"
-            app:tint="@color/white" />
-
         <ImageButton
             android:id="@+id/btnLogOut"
             android:layout_width="40dp"
@@ -29,9 +18,21 @@
             android:background="@null"
             android:contentDescription="@string/logout_label"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ic_logout_icon"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/imTwitterLogo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/btnLogOut"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_icon_twitter"
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

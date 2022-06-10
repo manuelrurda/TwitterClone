@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class TimelineActivity extends AppCompatActivity {
     TweetsAdapter adapter;
 
     private SwipeRefreshLayout srlRefresh;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     ActivityResultLauncher<Intent> composeActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -70,28 +72,9 @@ public class TimelineActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline);
 
-        // Toolbar setup
-        btnLogOut = findViewById(R.id.btnLogOut);
-        btnLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TwitterApp.getRestClient(TimelineActivity.this).clearAccessToken();
+        client = TwitterApp.getRestClient(this);
 
-                Intent i = new Intent(TimelineActivity.this, LoginActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // this makes sure the Back button won't work
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-            }
-        });
-
-        btnCompose = findViewById(R.id.btnCompose);
-        btnCompose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
-                composeActivityResultLauncher.launch(intent);
-            }
-        });
+        toolbarSetup(this);
 
         // Swipe to Refresh
         srlRefresh = findViewById(R.id.srlRefresh);
@@ -102,14 +85,41 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
 
-
-        client = TwitterApp.getRestClient(this);
         // Init the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
 
-        // Recycler view setup
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerViewSetup(this);
+
+        populateHomeTimeline();
+    }
+
+    private void toolbarSetup(Context context) {
+        btnLogOut = findViewById(R.id.btnLogOut);
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TwitterApp.getRestClient(context).clearAccessToken();
+
+                Intent i = new Intent(context, LoginActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // this makes sure the Back button won't work
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+            }
+        });
+
+        btnCompose = findViewById(R.id.btnCompose);
+        btnCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ComposeActivity.class);
+                composeActivityResultLauncher.launch(intent);
+            }
+        });
+    }
+
+    private void recyclerViewSetup(Context context) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         rvTweets = findViewById(R.id.rvTweets);
         rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(adapter);
@@ -117,8 +127,38 @@ public class TimelineActivity extends AppCompatActivity {
                 linearLayoutManager.getOrientation());
         rvTweets.addItemDecoration(dividerItemDecoration);
 
-        populateHomeTimeline();
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+
+                Log.d(TAG, "loadNextDataFromApi: LOADING MORE");
+                String lastTweetId = tweets.get(tweets.size()-1).id;
+                client.getHomeTimelineEndless(lastTweetId, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        JSONArray jsonArray = json.jsonArray;
+                        try {
+                            adapter.addAll(Tweet.fromJsonArray(jsonArray));
+                        } catch (JSONException e) {
+                            Log.d(TAG, "JSON EXCEPTION", e);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+                    }
+                });
+
+                Log.d(TAG, "loadNextDataFromApi: LOADING MORE");
+
+            }
+        };
+
+        rvTweets.addOnScrollListener(scrollListener);
     }
+
 
     private void fetchTimelineAsync(int page) {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
@@ -127,6 +167,7 @@ public class TimelineActivity extends AppCompatActivity {
                 // CLEAR OUT old items before appending in the new ones
                 adapter.clear();
                 JSONArray jsonArray = json.jsonArray;
+                Log.d(TAG, "onSuccess: jsonArray: " + jsonArray);
                 try {
                     adapter.addAll(Tweet.fromJsonArray(jsonArray));
                 } catch (JSONException e) {
