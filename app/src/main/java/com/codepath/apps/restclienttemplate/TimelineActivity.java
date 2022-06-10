@@ -137,12 +137,7 @@ public class TimelineActivity extends AppCompatActivity {
                 client.getHomeTimelineEndless(lastTweetId, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
-                        JSONArray jsonArray = json.jsonArray;
-                        try {
-                            adapter.addAll(Tweet.fromJsonArray(jsonArray));
-                        } catch (JSONException e) {
-                            Log.d(TAG, "JSON EXCEPTION", e);
-                        }
+                        formJsonAddAll(json);
                     }
 
                     @Override
@@ -166,13 +161,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 // CLEAR OUT old items before appending in the new ones
                 adapter.clear();
-                JSONArray jsonArray = json.jsonArray;
-                Log.d(TAG, "onSuccess: jsonArray: " + jsonArray);
-                try {
-                    adapter.addAll(Tweet.fromJsonArray(jsonArray));
-                } catch (JSONException e) {
-                    Log.d(TAG, "JSON EXCEPTION", e);
-                }
+                formJsonAddAll(json);
                 // signal refresh has finished
                 srlRefresh.setRefreshing(false);
             }
@@ -188,13 +177,7 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
-                JSONArray jsonArray = json.jsonArray;
-                try {
-                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
-                    adapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    Log.d(TAG, "JSON EXCEPTION", e);
-                }
+                formJsonAddAll(json);
             }
 
             @Override
@@ -204,4 +187,12 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
+    private void formJsonAddAll(JsonHttpResponseHandler.JSON json){
+        JSONArray jsonArray = json.jsonArray;
+        try {
+            adapter.addAll(Tweet.fromJsonArray(jsonArray));
+        } catch (JSONException e) {
+            Log.d(TAG, "JSON EXCEPTION", e);
+        }
+    }
 }

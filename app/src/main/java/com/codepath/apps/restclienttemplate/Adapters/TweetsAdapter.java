@@ -86,11 +86,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                     .circleCrop()
                     .into(ivProfileImage);
 
-
-            int tweetMediaRadiusdp = 50;
             Glide.with(context)
                     .load(tweet.mediaUrl)
-                    .transform(new RoundedCorners(tweetMediaRadiusdp))
+                    .transform(new RoundedCorners(
+                            (int) context.getResources()
+                                    .getDimension(R.dimen.tweet_media_radius_dp)))
                     .into(ivTweetMedia);
 
         }
